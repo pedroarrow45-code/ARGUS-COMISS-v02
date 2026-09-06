@@ -1,0 +1,44 @@
+{
+  "name": "argus-group-results",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "node --experimental-strip-types --loader ./tests/module-loader.mjs --test --test-concurrency=1 tests/**/*.test.ts",
+    "test:commission": "node --experimental-strip-types --loader ./tests/module-loader.mjs --test --test-concurrency=1 tests/commission/**/*.test.ts",
+    "dev": "next dev",
+    "build": "DIRECT_URL=${DIRECT_URL:-${DATABASE_URL:-postgresql://localhost:5432/postgres}} prisma migrate deploy && prisma generate && next build",
+    "db:migrate": "prisma migrate deploy",
+    "fix:cleanup-may-2026-results": "tsx scripts/cleanup-may-2026-results.ts",
+    "start": "next start",
+    "commission:recalculate-closed": "tsx scripts/recalculate-closed-commission.ts",
+    "commission:audit": "tsx scripts/audit-commission-period.ts",
+    "commission:audit-historical": "tsx scripts/audit-historical-commissions.ts",
+    "commission:audit-august-2026": "tsx scripts/audit-august-2026-financial.ts",
+    "commission:audit-september-2026-base-goals": "tsx scripts/audit-september-2026-base-goals.ts",
+    "commission:repair-base-goals": "tsx scripts/repair-base-goals.ts",
+    "commission:compare-historical-goals": "tsx scripts/compare-historical-base-goals.ts",
+    "commission:restore-historical-goals": "tsx scripts/restore-historical-base-goals.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.2",
+    "html-to-image": "^1.11.11",
+    "next": "15.3.9",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "zustand": "5.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "22.14.1",
+    "@types/react": "19.0.12",
+    "@types/react-dom": "19.0.4",
+    "autoprefixer": "10.4.21",
+    "postcss": "8.5.3",
+    "prisma": "^6.19.2",
+    "tailwindcss": "3.4.17",
+    "tsx": "^4.19.3",
+    "typescript": "5.8.3"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}

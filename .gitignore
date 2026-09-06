@@ -1,0 +1,16 @@
+node_modules
+.next
+out
+dist
+.vercel
+*.log
+coverage
+.env
+.env.local
+.env.production.local
+restore-plan.json
+backup-before-goal-restore.json
+backups/
+restore-result.json
+
+.vercel

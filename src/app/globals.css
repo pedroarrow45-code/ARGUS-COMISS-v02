@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #eef2f7;
+  color: #0d1b30;
+  font-family: var(--font-ibm-plex-sans), sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+* {
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: #163050 transparent;
+}
+
+::selection {
+  background: rgba(212, 160, 23, 0.18);
+  color: #0d1b30;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #163050;
+  border-radius: 999px;
+}
+
+button,
+input,
+select,
+textarea,
+a {
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@layer base {
+  table {
+    @apply w-full border-collapse;
+  }
+}

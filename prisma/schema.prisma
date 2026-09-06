@@ -1,0 +1,235 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum EmployeeShift {
+  DAYTIME
+  NIGHTTIME
+}
+
+enum EmploymentType {
+  PERMANENT
+  PROBATION
+}
+
+enum GoalSource {
+  AUTOMATIC
+  MANUAL
+}
+
+enum EmployeePeriodStatus {
+  ACTIVE
+  VACATION
+  ABSENCE
+  MEDICAL_LEAVE
+}
+
+enum CommissionRuleSetStatus {
+  ACTIVE
+  RETIRED
+}
+
+model CommissionRuleSet {
+  // O schema atual é single-network e não possui entidade tenant/organization.
+  // A versão é, portanto, única no escopo global desta instalação.
+  id                         String                  @id @default(uuid()) @db.Uuid
+  version                    Int                     @unique
+  status                     CommissionRuleSetStatus @default(ACTIVE)
+  validFrom                  DateTime                @db.Date
+  validUntil                 DateTime?               @db.Date
+  daytimePermanentRate       Decimal                 @db.Decimal(10, 4)
+  nighttimePermanentRate     Decimal                 @db.Decimal(10, 4)
+  daytimeProbationRate       Decimal                 @db.Decimal(10, 4)
+  nighttimeProbationRate     Decimal                 @db.Decimal(10, 4)
+  probationGoalFactor        Decimal                 @db.Decimal(6, 4)
+  minimumEligibilityPercentage Decimal               @default(70) @db.Decimal(7, 2)
+  neutralMultiplier          Decimal                 @db.Decimal(6, 4)
+  greenMinimumPercentage     Decimal                 @db.Decimal(7, 2)
+  greenMultiplier            Decimal                 @db.Decimal(6, 4)
+  blueMinimumPercentage      Decimal                 @db.Decimal(7, 2)
+  blueMultiplier             Decimal                 @db.Decimal(6, 4)
+  teamBonusRate              Decimal                 @db.Decimal(6, 4)
+  createdAt                  DateTime                @default(now())
+  updatedAt                  DateTime                @updatedAt
+  monthlyMetrics             UnitMonthlyMetric[]
+  recalculationAudits        CommissionRecalculationAudit[]
+
+  @@map("commission_rule_sets")
+  @@index([status, validFrom, validUntil])
+}
+
+model User {
+  id           String    @id @default(uuid()) @db.Uuid
+  name         String    @db.VarChar(120)
+  email        String    @unique @db.VarChar(160)
+  passwordHash String    @db.VarChar(255)
+  role         UserRole  @default(MANAGER)
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("users")
+  @@index([isActive])
+  @@index([role, isActive])
+}
+
+model Unit {
+  id                     String                  @id @default(uuid()) @db.Uuid
+  name                   String                  @db.VarChar(160)
+  code                   String?                 @unique @db.VarChar(40)
+  isActive               Boolean                 @default(true)
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  employees              Employee[]
+  monthlyMetrics         UnitMonthlyMetric[]
+  employeeMonthlyRecords EmployeeMonthlyRecord[]
+  recalculationAudits     CommissionRecalculationAudit[]
+
+  @@map("units")
+  @@index([isActive])
+  @@index([name])
+}
+
+model Employee {
+  id                    String                  @id @default(uuid()) @db.Uuid
+  unitId                String                  @db.Uuid
+  name                  String                  @db.VarChar(160)
+  email                 String?                 @db.VarChar(160)
+  document              String?                 @db.VarChar(32)
+  status                EmployeeStatus          @default(ACTIVE)
+  shift                 EmployeeShift           @default(DAYTIME)
+  employmentType        EmploymentType          @default(PERMANENT)
+  admissionDate         DateTime?               @db.Date
+  eligibleForCommission Boolean                 @default(true)
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  unit                  Unit                    @relation(fields: [unitId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  monthlyRecords        EmployeeMonthlyRecord[]
+
+  @@map("employees")
+  @@index([unitId])
+  @@index([unitId, status])
+  @@index([status])
+  @@index([eligibleForCommission])
+  @@index([name])
+}
+
+model UnitMonthlyMetric {
+  id           String    @id @default(uuid()) @db.Uuid
+  unitId       String    @db.Uuid
+  year         Int
+  month        Int
+  goalAmount   Decimal   @db.Decimal(14, 2)
+  resultAmount Decimal   @db.Decimal(14, 2)
+  goalLiters   Decimal?  @db.Decimal(14, 2)
+  goalStock    Decimal?  @db.Decimal(14, 2)
+  resultLiters Decimal?  @db.Decimal(14, 3)
+  resultStock  Decimal?  @db.Decimal(14, 2)
+  notes        String?   @db.Text
+  closedAt     DateTime?
+  commissionRuleSetId String? @db.Uuid
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  unit         Unit      @relation(fields: [unitId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  commissionRuleSet CommissionRuleSet? @relation(fields: [commissionRuleSetId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@map("unit_monthly_metrics")
+  @@unique([unitId, year, month])
+  @@index([unitId])
+  @@index([year, month])
+  @@index([unitId, year])
+  @@index([unitId, year, month])
+  @@index([closedAt])
+  @@index([commissionRuleSetId])
+}
+
+model EmployeeMonthlyRecord {
+  id               String         @id @default(uuid()) @db.Uuid
+  employeeId       String         @db.Uuid
+  unitId           String         @db.Uuid
+  year             Int
+  month            Int
+
+  // ── snapshots do cadastro no mês ──
+  employmentType   EmploymentType
+  employeeShift    EmployeeShift
+
+  // ── meta individual ──
+  baseGoalLiters   Decimal        @db.Decimal(14, 3)
+  finalGoalLiters  Decimal        @db.Decimal(14, 3)
+  goalSource       GoalSource     @default(AUTOMATIC)
+
+  // ── resultado ──
+  soldLiters       Decimal        @default(0) @db.Decimal(14, 3)
+  abastecimento    Int            @default(0)
+
+  // ── estoque (manual por funcionário/mês) ──
+  soldStock            Decimal?       @db.Decimal(14, 2)
+  stockCommission      Decimal?       @db.Decimal(14, 2)
+  stockGoalCommission  Decimal?       @db.Decimal(14, 2)
+  baseStockGoal        Decimal?       @db.Decimal(14, 2)
+  effectiveStockGoal   Decimal?       @db.Decimal(14, 2)
+  dobras               Decimal?       @db.Decimal(14, 2)
+  periodStatus         EmployeePeriodStatus @default(ACTIVE)
+
+  // ── multiplicadores de potencialização ──
+  stockMultiplier  Decimal?       @db.Decimal(4, 2)
+  litersMultiplier Decimal?       @db.Decimal(4, 2)
+
+  // ── output do cálculo (preenchidos ao fechar mês) ──
+  baseRate         Decimal?       @db.Decimal(10, 4)
+  baseCommission   Decimal?       @db.Decimal(14, 2)
+  bonusApplied     Boolean        @default(false)
+  bonusAmount      Decimal?       @db.Decimal(14, 2)
+  totalCommission  Decimal?       @db.Decimal(14, 2)
+  finalTotalCommission Decimal?   @db.Decimal(14, 2)
+  commissionEligible Boolean?
+  minimumEligibilityPercentage Decimal? @db.Decimal(7, 2)
+  ineligibilityReason String? @db.VarChar(255)
+
+  notes            String?        @db.Text
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  employee         Employee       @relation(fields: [employeeId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  unit             Unit           @relation(fields: [unitId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@map("employee_monthly_records")
+  @@unique([employeeId, year, month])
+  @@index([employeeId])
+  @@index([unitId, year, month])
+  @@index([year, month])
+}
+
+model CommissionRecalculationAudit {
+  id String @id @default(uuid()) @db.Uuid
+  unitId String @db.Uuid
+  year Int
+  month Int
+  commissionRuleSetId String @db.Uuid
+  reason String @db.VarChar(500)
+  actor String @db.VarChar(160)
+  previousResults Json
+  newResults Json
+  createdAt DateTime @default(now())
+  unit Unit @relation(fields: [unitId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  commissionRuleSet CommissionRuleSet @relation(fields: [commissionRuleSetId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  @@map("commission_recalculation_audits")
+  @@index([unitId, year, month])
+  @@index([commissionRuleSetId])
+}
