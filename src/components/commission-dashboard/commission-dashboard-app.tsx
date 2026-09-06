@@ -55,8 +55,7 @@ export function CommissionDashboardApp({
           {activeTab === "configuracoes" ? <SettingsTab initialCurrent={commissionRulesCurrent} initialHistory={commissionRulesHistory} /> : null}
         </main>
         <footer className="border-t border-border bg-surface px-3 py-2 text-center text-[10px] tracking-[0.5px] text-text-muted">
-          POSTO BRASIL Sistema de Gestão de Comissões ·{" "}
-          <span className="font-bold text-navy-700">Powered by ARGUS SYSTEMS</span> · {new Date().getFullYear()}
+          <span className="font-bold text-navy-700">ARGUS COMISS</span> · Inteligência para metas e premiação · {new Date().getFullYear()}
         </footer>
       </div>
     </div>

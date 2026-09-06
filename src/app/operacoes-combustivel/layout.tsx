@@ -15,7 +15,7 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "POSTO BRASIL | Operacoes de Combustivel",
+  title: "ARGUS COMISS | Operações de Combustível",
   description: "Modulo operacional para planejamento de pedidos e montagem de carga por caminhao-tanque.",
 };
 

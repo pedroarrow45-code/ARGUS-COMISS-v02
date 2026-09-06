@@ -1,7 +1,7 @@
 import type { TabId } from "@/types/commission-dashboard";
 
 const TITLES: Record<TabId, string> = {
-  dashboard: "Dashboard",
+  dashboard: "Visão executiva",
   unidades: "Unidades",
   funcionarios: "Funcionários",
   metas: "Metas",
@@ -18,14 +18,11 @@ export function CommissionTopbar({ activeTab }: { activeTab: TabId }) {
   });
 
   return (
-    <header className="flex min-h-[60px] flex-col justify-between gap-3 border-b border-border bg-surface px-7 py-4 shadow-[0_1px_0_#DDE3EE] md:flex-row md:items-center">
+    <header className="flex min-h-[68px] flex-col justify-between gap-3 border-b border-border bg-surface/95 px-7 py-4 shadow-[0_1px_0_#DDE3EE] backdrop-blur md:flex-row md:items-center">
       <div>
-        <div className="text-[16px] font-bold tracking-[-0.2px] text-text-primary">
-          POSTO BRASIL - Sistema de Gestão de Comissões
-        </div>
-        <div className="text-[11px] text-text-muted">
-          {TITLES[activeTab]} · {today}
-        </div>
+        <div className="text-[10px] font-bold uppercase tracking-[1.8px] text-gold-600">Rede Horizonte Combustíveis</div>
+        <div className="mt-0.5 text-[16px] font-bold tracking-[-0.2px] text-text-primary">{TITLES[activeTab]}</div>
+        <div className="text-[11px] capitalize text-text-muted">{today}</div>
       </div>
 
       <div className="flex items-center gap-3">
@@ -37,9 +34,8 @@ export function CommissionTopbar({ activeTab }: { activeTab: TabId }) {
             Sair
           </button>
         </form>
-        <div className="flex items-center gap-1.5 rounded-full bg-success-bg px-3 py-1.5 text-[11px] font-semibold text-success">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-success" />
-          Sistema online
+        <div className="hidden items-center gap-1.5 rounded-full border border-border bg-surface-2 px-3 py-1.5 text-[11px] font-semibold text-text-secondary sm:flex">
+          <span className="h-1.5 w-1.5 rounded-full bg-success" /> Operação sincronizada
         </div>
         <div
           title="Administrador"

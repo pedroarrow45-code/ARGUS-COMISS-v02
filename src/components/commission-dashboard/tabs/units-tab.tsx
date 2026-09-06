@@ -104,7 +104,7 @@ export function UnitsTab({ overview }: { overview: UnitsOverview }) {
     <div>
       <PageHeader
         title="Gestão de Unidades"
-        description="Cadastro e gerenciamento das unidades da rede POSTO BRASIL"
+        description="Cadastro e acompanhamento das unidades da Rede Horizonte"
         actions={
           <ShellButton onClick={openAddModal}>
             <DashboardIcon name="plus" className="h-[14px] w-[14px]" />
@@ -204,7 +204,7 @@ export function UnitsTab({ overview }: { overview: UnitsOverview }) {
           <Field label="Nome da Unidade *">
             <Input
               value={form.name}
-              placeholder="Ex: Posto Brasil - Centro"
+              placeholder="Ex: Horizonte Centro"
               onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
             />
           </Field>

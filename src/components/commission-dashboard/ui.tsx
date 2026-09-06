@@ -104,11 +104,11 @@ export function StatusBadge({ children, tone, className }: BadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold",
-        tone === "green" && "bg-success-bg text-success",
-        tone === "red" && "bg-danger-bg text-danger",
-        tone === "gold" && "bg-gold-500/12 text-gold-600",
-        tone === "navy" && "bg-navy-600/10 text-navy-600",
+        "inline-flex items-center gap-1 rounded-full border border-transparent px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.45px]",
+        tone === "green" && "border-success/15 bg-success-bg text-success",
+        tone === "red" && "border-danger/15 bg-danger-bg text-danger",
+        tone === "gold" && "border-gold-500/15 bg-gold-500/10 text-gold-600",
+        tone === "navy" && "border-navy-600/10 bg-navy-600/10 text-navy-600",
         tone === "gray" && "border border-border bg-surface-2 text-text-muted",
         className,
       )}
