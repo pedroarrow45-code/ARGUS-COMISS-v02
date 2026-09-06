@@ -1,70 +1,44 @@
 import type { HistoricalPoint } from "@/types/commission-dashboard";
 
 export function BarChart({ data }: { data: HistoricalPoint[] }) {
-  const maxValue = Math.max(...data.flatMap((point) => [point.goal, point.result]));
-  const width = 500;
-  const height = 160;
-  const padding = { top: 8, right: 8, bottom: 28, left: 8 };
-  const barWidth = (width - padding.left - padding.right) / (data.length * 2 + data.length - 1);
+  if (data.length === 0) return <div className="flex h-full items-center justify-center text-xs text-text-muted">Sem histórico para exibir.</div>;
 
-  const scaleY = (value: number) => height - padding.bottom - (value / maxValue) * (height - padding.top - padding.bottom);
-  const barHeight = (value: number) => (value / maxValue) * (height - padding.top - padding.bottom);
+  const width = 720;
+  const height = 230;
+  const padding = { top: 28, right: 18, bottom: 32, left: 18 };
+  const maxValue = Math.max(1, ...data.flatMap((point) => [point.goal, point.result])) * 1.08;
+  const plotHeight = height - padding.top - padding.bottom;
+  const step = (width - padding.left - padding.right) / data.length;
+  const scaleY = (value: number) => padding.top + plotHeight - (value / maxValue) * plotHeight;
+  const goalPoints = data.map((point, index) => `${padding.left + step * index + step / 2},${scaleY(point.goal)}`).join(" ");
 
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" className="h-full w-full">
-      <defs>
-        <linearGradient id="goalGradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1D4170" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="#2A5A9E" stopOpacity="0.6" />
-        </linearGradient>
-        <linearGradient id="resultGradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#D4A017" stopOpacity="0.95" />
-          <stop offset="100%" stopColor="#B8860B" stopOpacity="0.7" />
-        </linearGradient>
-      </defs>
+    <div className="h-full w-full">
+      <div className="mb-2 flex items-center gap-5 text-[10px] font-semibold uppercase tracking-[0.8px] text-text-muted">
+        <span className="flex items-center gap-2"><i className="h-2 w-2 bg-navy-700" /> Resultado</span>
+        <span className="flex items-center gap-2"><i className="h-px w-4 bg-gold-500" /> Meta</span>
+      </div>
+      <svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" className="h-[calc(100%-1.5rem)] w-full overflow-visible" role="img" aria-label="Histórico de meta e resultado em litros">
+        {[0.25, 0.5, 0.75, 1].map((factor) => (
+          <line key={factor} x1={padding.left} x2={width - padding.right} y1={padding.top + plotHeight * (1 - factor)} y2={padding.top + plotHeight * (1 - factor)} stroke="#D8DEE8" strokeWidth="1" strokeDasharray="3 5" />
+        ))}
 
-      {[0.25, 0.5, 0.75, 1].map((factor) => (
-        <line
-          key={factor}
-          x1={padding.left}
-          x2={width - padding.right}
-          y1={height - padding.bottom - factor * (height - padding.top - padding.bottom)}
-          y2={height - padding.bottom - factor * (height - padding.top - padding.bottom)}
-          stroke="#DDE3EE"
-          strokeWidth="1"
-        />
-      ))}
+        {data.map((point, index) => {
+          const x = padding.left + step * index + step * 0.22;
+          const y = scaleY(point.result);
+          const completion = point.goal > 0 ? Math.round((point.result / point.goal) * 100) : 0;
+          return (
+            <g key={point.month}>
+              <rect x={x} y={y} width={step * 0.56} height={padding.top + plotHeight - y} fill="#163050" opacity={index === data.length - 1 ? 1 : 0.72} rx="2" />
+              <text x={x + step * 0.28} y={Math.max(12, y - 7)} textAnchor="middle" fontSize="10" fontWeight="600" fill="#4A5E7A">{completion}%</text>
+              <text x={x + step * 0.28} y={height - 9} textAnchor="middle" fontSize="10" fontWeight="600" fill="#687891">{point.month}</text>
+            </g>
+          );
+        })}
 
-      {data.map((point, index) => {
-        const groupWidth = barWidth * 2 + barWidth * 0.4;
-        const x = padding.left + index * (groupWidth + barWidth * 0.5);
-
-        return (
-          <g key={point.month}>
-            <rect x={x} y={scaleY(point.goal)} width={barWidth} height={barHeight(point.goal)} fill="url(#goalGradient)" rx="2" />
-            <rect
-              x={x + barWidth + barWidth * 0.2}
-              y={scaleY(point.result)}
-              width={barWidth}
-              height={barHeight(point.result)}
-              fill="url(#resultGradient)"
-              rx="2"
-            />
-            <text x={x + barWidth + barWidth * 0.1} y={height - 8} textAnchor="middle" fontSize="9" fill="#8A9BBB">
-              {point.month}
-            </text>
-          </g>
-        );
-      })}
-
-      <rect x={width - 110} y={8} width={8} height={8} fill="url(#goalGradient)" rx="1" />
-      <text x={width - 98} y={16} fontSize="9" fill="#8A9BBB">
-        Meta
-      </text>
-      <rect x={width - 60} y={8} width={8} height={8} fill="url(#resultGradient)" rx="1" />
-      <text x={width - 48} y={16} fontSize="9" fill="#8A9BBB">
-        Resultado
-      </text>
-    </svg>
+        <polyline points={goalPoints} fill="none" stroke="#D4A017" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+        {data.map((point, index) => <circle key={`goal-${point.month}`} cx={padding.left + step * index + step / 2} cy={scaleY(point.goal)} r="3" fill="#F1F3F6" stroke="#B8860B" strokeWidth="2" vectorEffect="non-scaling-stroke" />)}
+      </svg>
+    </div>
   );
 }

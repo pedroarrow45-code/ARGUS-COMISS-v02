@@ -201,7 +201,7 @@ function getManualReportGoalOverride(unitName: string): ReportGoalOverride {
 
 export function buildPrintHtml(units: Unit[], employees: Employee[], month: number, year: number, title: string) {
   const normalizedUnitName = units.length === 1
-    ? units[0].name.replace(/^POSTO BRASIL\s*-\s*/i, "").trim()
+    ? units[0].name.replace(/^Horizonte\s*/i, "").trim()
     : "TODAS AS UNIDADES";
   const headerUnitName = normalizedUnitName.length > 0 ? normalizedUnitName : "UNIDADE";
   const reportPeriod = `${MONTHS[month]}/${year}`;
@@ -344,7 +344,7 @@ export function buildPrintHtml(units: Unit[], employees: Employee[], month: numb
         <div class="unit-block">
           <div class="unit-header">
             <div>
-              <div class="unit-name">POSTO BRASIL · ${unit.name}</div>
+              <div class="unit-name">ARGUS COMISS · ${unit.name}</div>
               <div class="unit-sub">${MONTHS[month]} / ${year} · ${formatPercentPtBr(performance.value)}% (${performance.source ?? "Sem base"})</div>
             </div>
           </div>
@@ -432,7 +432,7 @@ export function buildPrintHtml(units: Unit[], employees: Employee[], month: numb
   <div class="report-page">
   <div class="header">
     <div>
-      <div class="logo">POSTO BRASIL - <span class="logo-unit">${headerUnitName}</span></div>
+      <div class="logo">ARGUS COMISS · <span class="logo-unit">${headerUnitName}</span></div>
       <div class="logo-sub">${reportPeriod}</div>
     </div>
   </div>
@@ -468,7 +468,7 @@ export function buildPrintHtml(units: Unit[], employees: Employee[], month: numb
     </div>
     <div class="rules-footnote">Com a conquista total do time, a comissão aumenta em 5,0%.</div>
   </section>
-  <div class="footer">Documento gerado automaticamente pelo sistema POSTO BRASIL</div>
+  <div class="footer">Documento gerado automaticamente pelo ARGUS COMISS</div>
   </div>
   <script>window.onload=()=>{window.print()}<\/script>
   </body></html>`;
@@ -479,7 +479,7 @@ export function buildCsv(units: Unit[], employees: Employee[], month: number, ye
   const now = new Date().toLocaleDateString("pt-BR");
 
   const lines = [
-    "POSTO BRASIL - Relatório de Comissões",
+    "ARGUS COMISS - Relatório de Comissões",
     `Período${separator}${MONTHS[month]}/${year}`,
     `Gerado em${separator}${now}`,
     "",

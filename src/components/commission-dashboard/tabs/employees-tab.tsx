@@ -143,12 +143,12 @@ export function EmployeesTab({ overview }: { overview: EmployeesOverview }) {
         </Select>
       </FilterBar>
 
-      <div className="overflow-hidden rounded-[10px] border border-border bg-surface shadow-panel">
+      <div className="overflow-hidden border-y border-border-dark bg-surface/60">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[760px] border-collapse">
+          <table className="w-full min-w-[920px] border-collapse">
             <thead>
               <tr>
-                {["Funcionário", "Unidade", "Status", "Comissão Individual", "Ações"].map((title) => (
+                {["Funcionário", "Unidade", "Vínculo", "Turno", "Status", "Comissão", "Ações"].map((title) => (
                   <th
                     key={title}
                     className="border-b border-border bg-surface-2 px-3.5 py-2.5 text-left text-[10px] font-bold uppercase tracking-[1.2px] text-text-muted"
@@ -163,7 +163,7 @@ export function EmployeesTab({ overview }: { overview: EmployeesOverview }) {
                 <EmptyState
                   icon={<DashboardIcon name="users" className="h-10 w-10" />}
                   message="Nenhum funcionário encontrado."
-                  colSpan={5}
+                  colSpan={7}
                 />
               ) : null}
               {filteredEmployees.map((employee) => {
@@ -181,11 +181,17 @@ export function EmployeesTab({ overview }: { overview: EmployeesOverview }) {
                       <StatusBadge tone="navy">{unit?.name ?? "—"}</StatusBadge>
                     </td>
                     <td className="border-b border-border px-3.5 py-3 group-hover:bg-surface-2">
+                      <StatusBadge tone={employee.employmentType === "experiencia" ? "gold" : "gray"}>{employee.employmentType === "experiencia" ? "Experiência" : "Efetivo"}</StatusBadge>
+                    </td>
+                    <td className="border-b border-border px-3.5 py-3 text-[11px] font-semibold uppercase tracking-[0.5px] text-text-secondary group-hover:bg-surface-2">
+                      {employee.shift === "noturno" ? "Noturno" : "Diurno"}
+                    </td>
+                    <td className="border-b border-border px-3.5 py-3 group-hover:bg-surface-2">
                       <StatusBadge tone={employee.status === "ativo" ? "green" : "gray"}>
                         {employee.status === "ativo" ? "Ativo" : "Inativo"}
                       </StatusBadge>
                     </td>
-                    <td className="border-b border-border px-3.5 py-3 font-mono text-[12px] font-semibold text-gold-600 group-hover:bg-surface-2">
+                    <td className="border-b border-border px-3.5 py-3 text-right font-mono text-[12px] font-semibold text-text-primary group-hover:bg-surface-2">
                       {employee.totalCommission != null ? formatCurrency(employee.totalCommission) : "—"}
                     </td>
                     <td className="border-b border-border px-3.5 py-3 group-hover:bg-surface-2">

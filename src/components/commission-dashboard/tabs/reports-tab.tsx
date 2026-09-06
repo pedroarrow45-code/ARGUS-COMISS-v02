@@ -130,7 +130,7 @@ export function ReportsTab({ initialOverview }: { initialOverview: ReportsOvervi
   function exportFullCsv() {
     downloadCsv(
       buildCsv(units, employees, selectedMonth, selectedYear),
-      `posto-brasil-comissoes-${MONTHS[selectedMonth].toLowerCase()}-${selectedYear}.csv`,
+      `argus-comiss-rede-horizonte-${MONTHS[selectedMonth].toLowerCase()}-${selectedYear}.csv`,
     );
     showToast("CSV completo baixado com sucesso.");
   }
@@ -177,7 +177,7 @@ export function ReportsTab({ initialOverview }: { initialOverview: ReportsOvervi
   function exportUnitCsv(unit: Unit) {
     downloadCsv(
       buildCsv([unit], employees, selectedMonth, selectedYear),
-      `posto-brasil-${unit.name.replace(/\s+/g, "-").toLowerCase()}-${MONTHS[selectedMonth].toLowerCase()}-${selectedYear}.csv`,
+      `argus-comiss-${unit.name.replace(/\s+/g, "-").toLowerCase()}-${MONTHS[selectedMonth].toLowerCase()}-${selectedYear}.csv`,
     );
     showToast(`CSV da unidade "${unit.name}" baixado.`);
   }
@@ -301,10 +301,10 @@ export function ReportsTab({ initialOverview }: { initialOverview: ReportsOvervi
         </AlertBox>
       ) : null}
 
-      <div ref={reportRef} className="mb-4 rounded-[10px] border border-border bg-surface shadow-panel">
+      <div ref={reportRef} className="mb-5 border-y border-border-dark bg-surface/55">
         <div className="flex flex-col justify-between gap-5 p-5 md:flex-row md:items-center">
           <div>
-            <div className="font-mono text-[15px] font-bold text-navy-800">POSTO BRASIL</div>
+            <div className="font-mono text-[15px] font-bold text-navy-800">ARGUS COMISS</div>
             <div className="text-[12px] text-text-secondary">
               Relatório de Comissões - {MONTHS[selectedMonth]} {selectedYear}
             </div>
@@ -349,7 +349,7 @@ export function ReportsTab({ initialOverview }: { initialOverview: ReportsOvervi
               ref={(node) => {
                 unitReportRefs.current[unit.id] = node;
               }}
-              className="overflow-hidden rounded-[10px] border border-border bg-surface shadow-panel"
+              className="overflow-hidden border-y border-border-dark bg-surface/60"
             >
               <div className="flex flex-col gap-3 bg-navy-800 px-4 py-3 text-white lg:flex-row lg:items-start lg:justify-between">
                 <div className="flex-1">
@@ -460,7 +460,7 @@ export function ReportsTab({ initialOverview }: { initialOverview: ReportsOvervi
       </div>
 
       <div className="mt-2 border-t border-border px-1 py-5 text-center text-[11px] text-text-muted">
-        Documento gerado automaticamente pelo sistema POSTO BRASIL · Powered by ARGUS SYSTEMS
+        Documento gerado automaticamente pelo sistema ARGUS COMISS · Rede Horizonte Combustíveis
       </div>
     </div>
   );

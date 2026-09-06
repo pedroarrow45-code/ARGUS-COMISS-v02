@@ -89,11 +89,11 @@ export function ShellButton({
 }
 
 export function PanelCard({ children, className }: CardProps) {
-  return <div className={cn("rounded-[10px] border border-border bg-surface shadow-panel", className)}>{children}</div>;
+  return <section className={cn("border-y border-border-dark bg-surface/45", className)}>{children}</section>;
 }
 
 export function PanelCardHeader({ children, className }: CardSectionProps) {
-  return <div className={cn("flex items-center justify-between border-b border-border px-5 py-4", className)}>{children}</div>;
+  return <div className={cn("flex items-center justify-between border-b border-border-dark px-5 py-4", className)}>{children}</div>;
 }
 
 export function PanelCardBody({ children, className }: CardSectionProps) {
@@ -104,12 +104,12 @@ export function StatusBadge({ children, tone, className }: BadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold",
-        tone === "green" && "bg-success-bg text-success",
-        tone === "red" && "bg-danger-bg text-danger",
-        tone === "gold" && "bg-gold-500/12 text-gold-600",
-        tone === "navy" && "bg-navy-600/10 text-navy-600",
-        tone === "gray" && "border border-border bg-surface-2 text-text-muted",
+        "inline-flex items-center gap-1 border-l-2 border-transparent px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.65px]",
+        tone === "green" && "border-l-success bg-success/5 text-success",
+        tone === "red" && "border-l-danger bg-danger/5 text-danger",
+        tone === "gold" && "border-l-gold-500 bg-gold-500/5 text-gold-600",
+        tone === "navy" && "border-l-navy-600 bg-navy-600/5 text-navy-600",
+        tone === "gray" && "border-l-border-dark bg-black/[0.02] text-text-muted",
         className,
       )}
     >
@@ -171,10 +171,10 @@ export function PageHeader({
   actions?: ReactNode;
 }) {
   return (
-    <div className="mb-6 flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
+    <div className="mb-5 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
       <div>
-        <h2 className="text-[20px] font-bold text-text-primary">{title}</h2>
-        <p className="mt-0.5 text-[13px] text-text-secondary">{description}</p>
+        <h2 className="font-heading text-[21px] font-bold tracking-[-0.2px] text-text-primary">{title}</h2>
+        <p className="mt-0.5 max-w-2xl text-[12px] text-text-secondary">{description}</p>
       </div>
       {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
     </div>
@@ -186,7 +186,7 @@ export function Input(props: InputHTMLAttributes<HTMLInputElement>) {
     <input
       {...props}
       className={cn(
-        "w-full rounded-[6px] border border-border-dark bg-surface px-3 py-[9px] text-[13px] text-text-primary outline-none transition focus:border-navy-600 focus:ring-4 focus:ring-navy-600/10",
+        "w-full rounded-[3px] border border-border-dark bg-surface px-3 py-[9px] text-[13px] text-text-primary outline-none transition focus:border-gold-600 focus:ring-2 focus:ring-gold-500/10",
         props.className,
       )}
     />
@@ -336,7 +336,7 @@ export function Field({
 }
 
 export function FilterBar({ children }: { children: ReactNode }) {
-  return <div className="mb-4 flex flex-col gap-2 md:flex-row">{children}</div>;
+  return <div className="mb-4 flex flex-col gap-2 border-y border-border bg-white/35 py-3 md:flex-row">{children}</div>;
 }
 
 export function SearchField({

@@ -19,7 +19,7 @@ const config: Config = {
         "gold-500": "#D4A017",
         "gold-400": "#EBB92D",
         "gold-300": "#F5CC5A",
-        bg: "#EEF2F7",
+        bg: "#F1F3F6",
         surface: "#FFFFFF",
         "surface-2": "#F5F7FB",
         border: "#DDE3EE",
@@ -41,7 +41,7 @@ const config: Config = {
         heading: ["var(--font-barlow-condensed)"],
       },
       boxShadow: {
-        panel: "0 1px 4px rgba(10,24,50,0.08), 0 4px 16px rgba(10,24,50,0.06)",
+        panel: "0 1px 2px rgba(10,24,50,0.06), 0 8px 24px rgba(10,24,50,0.045)",
       },
     },
   },
