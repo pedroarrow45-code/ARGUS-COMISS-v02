@@ -70,4 +70,8 @@ a {
   thead th {
     @apply sticky top-0 z-10;
   }
+
+  tbody tr {
+    transition: background-color 140ms ease;
+  }
 }

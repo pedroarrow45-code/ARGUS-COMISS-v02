@@ -155,16 +155,12 @@ export function GoalsTab({ overview: initialOverview }: { overview: GoalsOvervie
         }
       />
 
-      <div className="mb-4 grid gap-4 xl:grid-cols-3">
-        <div className="rounded-[10px] border border-border bg-surface shadow-panel">
-          <div className="p-5">
-            <div className="text-[11px] font-semibold uppercase tracking-[1px] text-text-muted">Comissão Total a Distribuir</div>
-            <div className="mt-2 font-mono text-[18px] font-semibold text-gold-600">{formatCurrency(totalCommission)}</div>
-          </div>
-        </div>
+      <div className="mb-5 flex items-center justify-between border-y border-border-dark py-3">
+        <div><div className="text-[9px] font-bold uppercase tracking-[1.4px] text-text-muted">Comissão da competência</div><div className="mt-1 font-mono text-[20px] font-semibold text-text-primary">{formatCurrency(totalCommission)}</div></div>
+        <div className="text-right text-[10px] text-text-muted"><strong className="block font-mono text-[13px] text-text-secondary">{units.length}</strong> unidades monitoradas</div>
       </div>
 
-      <div className="overflow-hidden rounded-[10px] border border-border bg-surface shadow-panel">
+      <div className="overflow-hidden border-y border-border-dark bg-surface/60">
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <span className="text-[13px] font-bold tracking-[0.2px] text-text-primary">
             Metas por Unidade — {MONTHS[selectedMonth]}/{selectedYear}

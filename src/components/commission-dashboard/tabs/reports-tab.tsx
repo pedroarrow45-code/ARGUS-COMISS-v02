@@ -301,7 +301,7 @@ export function ReportsTab({ initialOverview }: { initialOverview: ReportsOvervi
         </AlertBox>
       ) : null}
 
-      <div ref={reportRef} className="mb-4 rounded-[10px] border border-border bg-surface shadow-panel">
+      <div ref={reportRef} className="mb-5 border-y border-border-dark bg-surface/55">
         <div className="flex flex-col justify-between gap-5 p-5 md:flex-row md:items-center">
           <div>
             <div className="font-mono text-[15px] font-bold text-navy-800">ARGUS COMISS</div>
@@ -349,7 +349,7 @@ export function ReportsTab({ initialOverview }: { initialOverview: ReportsOvervi
               ref={(node) => {
                 unitReportRefs.current[unit.id] = node;
               }}
-              className="overflow-hidden rounded-[10px] border border-border bg-surface shadow-panel"
+              className="overflow-hidden border-y border-border-dark bg-surface/60"
             >
               <div className="flex flex-col gap-3 bg-navy-800 px-4 py-3 text-white lg:flex-row lg:items-start lg:justify-between">
                 <div className="flex-1">

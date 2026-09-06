@@ -117,7 +117,7 @@ export function UnitsTab({ overview }: { overview: UnitsOverview }) {
         <SearchField value={search} placeholder="Buscar unidade..." onChange={setSearch} />
       </FilterBar>
 
-      <div className="overflow-hidden rounded-[10px] border border-border bg-surface shadow-panel">
+      <div className="overflow-hidden border-y border-border-dark bg-surface/60">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[820px] border-collapse">
             <thead>
