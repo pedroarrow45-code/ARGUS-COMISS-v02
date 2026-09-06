@@ -102,13 +102,6 @@ export async function validateSessionToken(token?: string): Promise<boolean> {
   }
 }
 
-export function getAuthConfig() {
-  return {
-    email: getRequiredEnv("AUTH_EMAIL"),
-    password: getRequiredEnv("AUTH_PASSWORD"),
-  };
-}
-
 export function getSessionCookieName() {
   return SESSION_COOKIE_NAME;
 }
