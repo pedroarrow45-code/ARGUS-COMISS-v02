@@ -1,13 +1,31 @@
 import { randomBytes, scrypt as scryptCallback, timingSafeEqual } from "node:crypto";
-import { promisify } from "node:util";
 
-const scrypt = promisify(scryptCallback);
 const KEY_LENGTH = 64;
 const SCRYPT_OPTIONS = { N: 16_384, r: 8, p: 1, maxmem: 32 * 1024 * 1024 } as const;
 
+interface ScryptOptions {
+  N: number;
+  r: number;
+  p: number;
+  maxmem: number;
+}
+
+function scrypt(password: string, salt: Buffer, keyLength: number, options: ScryptOptions): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    scryptCallback(password, salt, keyLength, options, (error, derivedKey) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+
+      resolve(derivedKey);
+    });
+  });
+}
+
 export async function hashPassword(password: string): Promise<string> {
   const salt = randomBytes(16);
-  const derivedKey = (await scrypt(password, salt, KEY_LENGTH, SCRYPT_OPTIONS)) as Buffer;
+  const derivedKey = await scrypt(password, salt, KEY_LENGTH, SCRYPT_OPTIONS);
 
   return [
     "scrypt",
@@ -27,12 +45,12 @@ export async function verifyPassword(password: string, storedHash: string): Prom
   try {
     const salt = Buffer.from(encodedSalt, "base64url");
     const expectedKey = Buffer.from(encodedKey, "base64url");
-    const derivedKey = (await scrypt(password, salt, expectedKey.length, {
+    const derivedKey = await scrypt(password, salt, expectedKey.length, {
       N: Number(n),
       r: Number(r),
       p: Number(p),
       maxmem: SCRYPT_OPTIONS.maxmem,
-    })) as Buffer;
+    });
 
     return expectedKey.length === derivedKey.length && timingSafeEqual(expectedKey, derivedKey);
   } catch {
