@@ -23,8 +23,8 @@ const barlowCondensed = Barlow_Condensed({
 });
 
 export const metadata: Metadata = {
-  title: "POSTO BRASIL | Sistema de Gestão de Comissões",
-  description: "Dashboard administrativo de gestão de comissões da rede POSTO BRASIL.",
+  title: "ARGUS COMISS | Gestão de Metas e Premiação",
+  description: "Plataforma multiunidade para gestão de metas, desempenho e premiação.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {

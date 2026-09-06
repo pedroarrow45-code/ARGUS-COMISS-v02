@@ -3,23 +3,23 @@ import { NextResponse } from "next/server";
 
 import {
   createSessionToken,
-  getAuthConfig,
   getSessionCookieName,
   getSessionTtlSeconds,
   validateSessionToken,
 } from "@/lib/auth";
+import { authenticateUser } from "@/lib/users";
 
 export async function POST(request: Request) {
   const formData = await request.formData();
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  const { email: validEmail, password: validPassword } = getAuthConfig();
+  const user = await authenticateUser(email, password);
 
-  if (email !== validEmail || password !== validPassword) {
+  if (!user) {
     return NextResponse.redirect(new URL("/login?error=1", request.url), 303);
   }
 
-  const token = await createSessionToken(email);
+  const token = await createSessionToken(user.email);
   const cookieStore = await cookies();
 
   cookieStore.set(getSessionCookieName(), token, {

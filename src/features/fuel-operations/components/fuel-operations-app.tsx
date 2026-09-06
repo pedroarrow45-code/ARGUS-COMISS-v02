@@ -54,7 +54,7 @@ export function FuelOperationsApp() {
           <div className={styles.logoIcon}>PB</div>
           <div>
             <p className={styles.logoTitle}>
-              POSTO <span>BRASIL</span>
+              ARGUS <span>COMISS</span>
             </p>
             <p className={styles.logoSubtitle}>Operacao de cargas por caminhao-tanque</p>
           </div>
