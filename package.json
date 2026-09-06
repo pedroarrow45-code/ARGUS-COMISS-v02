@@ -6,7 +6,7 @@
     "test": "node --experimental-strip-types --loader ./tests/module-loader.mjs --test --test-concurrency=1 tests/**/*.test.ts",
     "test:commission": "node --experimental-strip-types --loader ./tests/module-loader.mjs --test --test-concurrency=1 tests/commission/**/*.test.ts",
     "dev": "next dev",
-    "build": "DIRECT_URL=${DIRECT_URL:-${DATABASE_URL:-postgresql://localhost:5432/postgres}} prisma migrate deploy && prisma generate && next build",
+    "build": "prisma generate && next build",
     "db:migrate": "prisma migrate deploy",
     "fix:cleanup-may-2026-results": "tsx scripts/cleanup-may-2026-results.ts",
     "start": "next start",
